@@ -1,0 +1,605 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Registro de Evidencia — Práctica de Laboratorio</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --bg: #0A0C10;
+    --panel: #12161C;
+    --panel-soft: rgba(18,22,28,0.94);
+    --border: #232A33;
+    --border-soft: #1A1F27;
+    --accent: #FFB627;
+    --active: #39FF88;
+    --danger: #FF5D5D;
+    --text: #E8E6E1;
+    --text-muted: #6B7280;
+    --mono: 'JetBrains Mono', monospace;
+    --pixel: 'Press Start 2P', monospace;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background:
+      radial-gradient(circle at 20% 15%, rgba(255,182,39,0.05), transparent 40%),
+      radial-gradient(circle at 80% 85%, rgba(57,255,136,0.04), transparent 40%),
+      var(--bg);
+    color: var(--text);
+    font-family: var(--mono);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+
+  .stage {
+    width: 100%;
+    max-width: 960px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+  }
+
+  .setup-card {
+    width: 100%;
+    max-width: 440px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 32px 30px;
+  }
+
+  .eyebrow {
+    font-family: var(--pixel);
+    font-size: 9px;
+    letter-spacing: 2px;
+    line-height: 1.8;
+    color: var(--accent);
+    margin-bottom: 16px;
+  }
+
+  h1 {
+    font-size: 18px;
+    margin: 0 0 6px;
+    font-weight: 700;
+  }
+
+  .subtitle {
+    color: var(--text-muted);
+    font-size: 12.5px;
+    margin: 0 0 26px;
+    line-height: 1.6;
+  }
+
+  label {
+    display: block;
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .field {
+    margin-bottom: 18px;
+  }
+
+  input[type="text"] {
+    width: 100%;
+    background: #0D1116;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 11px 12px;
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 14px;
+    letter-spacing: 0.5px;
+    outline: none;
+    transition: border-color .15s ease;
+  }
+
+  input[type="text"]:focus {
+    border-color: var(--accent);
+  }
+
+  input[type="text"]::placeholder {
+    color: #3A4149;
+  }
+
+  input[readonly] {
+    color: #A4ABB4;
+    cursor: default;
+    background: #151A20;
+  }
+
+  .error-msg {
+    font-size: 11.5px;
+    color: var(--danger);
+    margin-top: 6px;
+    min-height: 14px;
+  }
+
+  .start-btn {
+    width: 100%;
+    margin-top: 8px;
+    background: var(--accent);
+    color: #1A1200;
+    border: none;
+    border-radius: 6px;
+    padding: 13px 16px;
+    font-family: var(--mono);
+    font-weight: 700;
+    font-size: 13.5px;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: filter .15s ease;
+  }
+
+  .start-btn:hover {
+    filter: brightness(1.08);
+  }
+
+  .start-btn:active {
+    filter: brightness(0.95);
+  }
+
+  .hint {
+    margin-top: 18px;
+    font-size: 11px;
+    color: var(--text-muted);
+    line-height: 1.6;
+    border-top: 1px solid var(--border-soft);
+    padding-top: 16px;
+  }
+
+  .overlay-wrap {
+    display: none;
+    width: 100%;
+    max-width: 300px;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .overlay-wrap.visible {
+    display: flex;
+  }
+
+  .hud {
+    width: 100%;
+    background: var(--panel-soft);
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    padding: 9px 11px;
+    backdrop-filter: blur(4px);
+  }
+
+  .hud-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+
+  .hud-status-group {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--active);
+    animation: pulse 1.6s infinite;
+    flex-shrink: 0;
+  }
+
+  @keyframes pulse {
+    0% {
+      box-shadow: 0 0 0 0 rgba(57,255,136,0.55);
+    }
+    70% {
+      box-shadow: 0 0 0 8px rgba(57,255,136,0);
+    }
+    100% {
+      box-shadow: 0 0 0 0 rgba(57,255,136,0);
+    }
+  }
+
+  .hud-status {
+    font-family: var(--pixel);
+    font-size: 7px;
+    letter-spacing: 1px;
+    color: var(--active);
+    white-space: nowrap;
+  }
+
+  .hud-clock {
+    color: var(--accent);
+    font-size: 11px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .hud-name {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    padding-bottom: 7px;
+    margin-bottom: 7px;
+    border-bottom: 1px solid var(--border-soft);
+    overflow: hidden;
+  }
+
+  .hud-name .hud-value {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .hud-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .hud-cell {
+    padding: 0 6px;
+    text-align: center;
+  }
+
+  .hud-cell:first-child {
+    padding-left: 0;
+  }
+
+  .hud-cell:last-child {
+    padding-right: 0;
+  }
+
+  .hud-cell:not(:first-child) {
+    border-left: 1px solid var(--border-soft);
+  }
+
+  .hud-label {
+    display: block;
+    color: var(--text-muted);
+    font-size: 7.5px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-bottom: 3px;
+  }
+
+  .hud-value {
+    display: block;
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: 0.3px;
+    word-break: break-all;
+    line-height: 1.25;
+  }
+
+  .reset-btn {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    border-radius: 6px;
+    padding: 7px 12px;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    cursor: pointer;
+  }
+
+  .reset-btn:hover {
+    color: var(--text);
+    border-color: var(--text-muted);
+  }
+
+  .placement-note {
+    max-width: 300px;
+    text-align: center;
+    font-size: 11px;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+
+  .placement-note strong {
+    color: var(--text);
+  }
+</style>
+</head>
+
+<body>
+
+<div class="stage">
+
+  <div class="setup-card" id="setupCard">
+
+    <div class="eyebrow">
+      SISTEMA DE EVIDENCIA · DESARROLLO DE VIDEOJUEGOS
+    </div>
+
+    <h1>Registro de evidencia de práctica</h1>
+
+    <p class="subtitle">
+      Ingresa el código de sesión proporcionado por el docente
+      para iniciar el registro de evidencia.
+    </p>
+
+    <div class="field">
+      <label for="dni">DNI o código de estudiante</label>
+      <input
+        type="text"
+        id="dni"
+        value="73453248"
+        readonly
+      >
+    </div>
+
+    <div class="field">
+      <label for="code">Código de sesión (lo entrega el docente)</label>
+      <input
+        type="text"
+        id="code"
+        placeholder="Ej. S05-2026II-7QK2"
+        maxlength="30"
+        autocomplete="off"
+        style="text-transform:uppercase;"
+      >
+      <div class="error-msg" id="codeError"></div>
+    </div>
+
+    <div class="field">
+      <label for="name">Nombre y apellido</label>
+      <input
+        type="text"
+        id="name"
+        value="Luis Gonzalo Basurco"
+        readonly
+      >
+    </div>
+
+    <button type="button" class="start-btn" id="startBtn">
+      Iniciar registro
+    </button>
+
+    <div class="hint">
+      El DNI y el nombre se encuentran configurados automáticamente.
+      Solo debes ingresar el código de sesión de tu práctica.
+      El registro funciona localmente sin conexión a una base de datos.
+    </div>
+
+  </div>
+
+  <div class="overlay-wrap" id="overlayWrap">
+
+    <div class="hud">
+
+      <div class="hud-top">
+
+        <div class="hud-status-group">
+          <span class="dot"></span>
+          <span class="hud-status">REGISTRO ACTIVO</span>
+        </div>
+
+        <span class="hud-clock" id="outClock">—</span>
+
+      </div>
+
+      <div class="hud-name">
+        <span class="hud-label">Estudiante</span>
+        <span class="hud-value" id="outName">
+          Luis Gonzalo Basurco
+        </span>
+      </div>
+
+      <div class="hud-grid">
+
+        <div class="hud-cell">
+          <span class="hud-label">DNI</span>
+          <span class="hud-value" id="outDni">
+            73453248
+          </span>
+        </div>
+
+        <div class="hud-cell">
+          <span class="hud-label">Sesión</span>
+          <span class="hud-value" id="outCode">—</span>
+        </div>
+
+      </div>
+
+    </div>
+
+    <p class="placement-note">
+      <strong>Ubica esta ventana en una esquina de tu pantalla</strong>
+      y continúa con la práctica en el resto del monitor.
+      Cada captura debe mostrar el recuadro completo,
+      incluida la hora.
+    </p>
+
+    <button type="button" class="reset-btn" id="resetBtn">
+      Reiniciar registro
+    </button>
+
+  </div>
+
+</div>
+
+<script>
+  // DATOS FIJOS DEL ESTUDIANTE
+  const STUDENT_DNI = "73453248";
+  const STUDENT_NAME = "Luis Gonzalo Basurco";
+
+  // ELEMENTOS
+  const setupCard = document.getElementById("setupCard");
+  const overlayWrap = document.getElementById("overlayWrap");
+
+  const startBtn = document.getElementById("startBtn");
+  const resetBtn = document.getElementById("resetBtn");
+
+  const dniInput = document.getElementById("dni");
+  const codeInput = document.getElementById("code");
+  const nameInput = document.getElementById("name");
+
+  const codeError = document.getElementById("codeError");
+
+  const outClock = document.getElementById("outClock");
+  const outDni = document.getElementById("outDni");
+  const outName = document.getElementById("outName");
+  const outCode = document.getElementById("outCode");
+
+  let clockTimer = null;
+
+  // CARGAR DATOS AUTOMATICAMENTE
+  dniInput.value = STUDENT_DNI;
+  nameInput.value = STUDENT_NAME;
+
+  // GUARDADO LOCAL PARA EVITAR PERDER DATOS
+  function saveSession(code, active) {
+    try {
+      sessionStorage.setItem("evidenceCode", code);
+      sessionStorage.setItem("evidenceActive", String(active));
+    } catch (error) {
+      console.warn("No se pudo guardar la sesión.", error);
+    }
+  }
+
+  function getSavedValue(key) {
+    try {
+      return sessionStorage.getItem(key);
+    } catch (error) {
+      return null;
+    }
+  }
+
+  // RELOJ
+  function formatClock() {
+    const now = new Date();
+
+    return now.toLocaleString("es-PE", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: false
+    });
+  }
+
+  function updateClock() {
+    outClock.textContent = formatClock();
+  }
+
+  function startClock() {
+    if (clockTimer !== null) {
+      clearInterval(clockTimer);
+    }
+
+    updateClock();
+
+    clockTimer = setInterval(updateClock, 1000);
+  }
+
+  function stopClock() {
+    if (clockTimer !== null) {
+      clearInterval(clockTimer);
+      clockTimer = null;
+    }
+  }
+
+  // MOSTRAR REGISTRO
+  function showRegister(code) {
+    outDni.textContent = STUDENT_DNI;
+    outName.textContent = STUDENT_NAME;
+    outCode.textContent = code;
+
+    setupCard.style.display = "none";
+    overlayWrap.classList.add("visible");
+
+    startClock();
+    saveSession(code, true);
+  }
+
+  // INICIAR
+  function startRegister() {
+    const code = codeInput.value.trim().toUpperCase();
+
+    codeError.textContent = "";
+
+    // SOLO SE EXIGE QUE SE INGRESE UN CODIGO
+    // NO SE VERIFICA CONTRA NINGUN SERVIDOR
+    if (code === "") {
+      codeError.textContent = "Ingresa el código de sesión.";
+      codeInput.focus();
+      return;
+    }
+
+    codeInput.value = code;
+    showRegister(code);
+  }
+
+  startBtn.addEventListener("click", startRegister);
+
+  // PERMITIR INICIAR CON ENTER
+  codeInput.addEventListener("keydown", function(event) {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      startRegister();
+    }
+  });
+
+  // GUARDAR EL CODIGO MIENTRAS SE ESCRIBE
+  codeInput.addEventListener("input", function() {
+    codeError.textContent = "";
+    saveSession(codeInput.value, false);
+  });
+
+  // REINICIAR REGISTRO
+  resetBtn.addEventListener("click", function() {
+    stopClock();
+
+    overlayWrap.classList.remove("visible");
+    setupCard.style.display = "block";
+
+    // CONSERVAR EL CODIGO PARA PODER EDITARLO
+    saveSession(codeInput.value, false);
+
+    codeInput.focus();
+  });
+
+  // RECUPERAR DATOS SI LIVE SERVER RECARGA LA PAGINA
+  function restoreSession() {
+    const savedCode = getSavedValue("evidenceCode");
+    const wasActive = getSavedValue("evidenceActive");
+
+    if (savedCode !== null) {
+      codeInput.value = savedCode;
+    }
+
+    if (wasActive === "true" && savedCode && savedCode.trim()) {
+      showRegister(savedCode.trim().toUpperCase());
+    }
+  }
+
+  restoreSession();
+</script>
+
+</body>
+</html>
