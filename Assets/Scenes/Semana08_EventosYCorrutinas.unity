@@ -5941,6 +5941,7 @@ GameObject:
   - component: {fileID: 400661062}
   - component: {fileID: 400661063}
   - component: {fileID: 400661064}
+  - component: {fileID: 400661065}
   m_Layer: 8
   m_Name: JugadorS06
   m_TagString: Player
@@ -6191,6 +6192,19 @@ MonoBehaviour:
   capaSuelo:
     serializedVersion: 2
     m_Bits: 8
+--- !u!114 &400661065
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 400661055}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6fe2c3d9097d4544b8a92ee1d981da95, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SaludJugadorS08
+  ultimoDigitoDNI: 8
 --- !u!1 &434371548
 GameObject:
   m_ObjectHideFlags: 0
@@ -6361,7 +6375,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: 0
+  m_TextStyleHashCode: -1183493901
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -8482,7 +8496,7 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
+    rgba: 4278246655
   m_fontColor: {r: 1, g: 0.8627451, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
@@ -8495,7 +8509,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: 0
+  m_TextStyleHashCode: -1183493901
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
