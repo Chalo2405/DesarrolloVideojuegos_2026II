@@ -1,6 +1,6 @@
 # Desarrollo de Videojuegos — 2026 II
 
-Avances guardados hasta el **8 de octubre de 2026**. El repositorio contiene el proyecto de Unity y el material de apoyo para continuar el trabajo en otra computadora.
+Avances prácticos guardados hasta el paso 2 de la Semana 8. El repositorio contiene el proyecto de Unity y el material de apoyo para continuar el trabajo en otra computadora.
 
 ## Abrir el proyecto en tu PC principal
 
@@ -13,7 +13,7 @@ Avances guardados hasta el **8 de octubre de 2026**. El repositorio contiene el 
 
 3. En Unity Hub, agrega el proyecto desde el disco seleccionando la carpeta clonada que contiene `Assets`, `Packages` y `ProjectSettings`.
 4. Ábrelo con Unity **6000.3.23f1**. La primera apertura necesita conexión para descargar los paquetes y puede tardar mientras Unity importa los recursos.
-5. En la ventana Project, abre `Assets/Scenes` y haz doble clic en la escena de la semana que quieras continuar. Para el avance más reciente, abre `Semana06_TileBasedyTerritorios.unity`.
+5. En la ventana Project, abre `Assets/Scenes` y haz doble clic en la escena de la semana que quieras continuar. Para el avance más reciente, abre `Semana08_EventosYCorrutinas.unity`.
 
 ## Trabajos incluidos
 
@@ -24,6 +24,8 @@ Avances guardados hasta el **8 de octubre de 2026**. El repositorio contiene el 
 | 3 | `Assets/Scenes/Semana03_AzaryBalance.unity` |
 | 5 | `Assets/Scenes/Semana05_InterfazyRendering2D.unity` |
 | 6 | `Assets/Scenes/Semana06_TileBasedyTerritorios.unity` |
+| 7 | `Assets/Scenes/Semana07_ParticulasEIA.unity` |
+| 8 | `Assets/Scenes/Semana08_EventosYCorrutinas.unity` (preparada hasta el paso 2) |
 
 También están incluidos los scripts, herramientas del editor, animaciones, audio, fotografías, sprites, prefabs, tiles, archivos `.meta`, configuración del proyecto y versiones de los paquetes.
 
@@ -41,4 +43,4 @@ En `MaterialDeApoyo` se conservan copias de los archivos que estaban junto al pr
 
 Conserva los archivos `.meta` junto a sus recursos: mantienen las referencias de las escenas. Las carpetas `Library`, `Temp`, `Logs` y `UserSettings` son datos locales que Unity vuelve a generar y no se incluyen en GitHub.
 
-La lista de escenas para compilar todavía referencia `SampleScene.unity`, que ya no existe. Para generar un ejecutable, selecciona primero la escena que quieras incluir en la configuración de compilación de Unity. Esto no impide abrir y editar las escenas anteriores.
+La Scene List tiene `Semana08_EventosYCorrutinas.unity` activa en el índice 2. La entrada antigua de `SampleScene.unity` está desactivada y apunta a un archivo que ya no existe; puedes quitarla al configurar una compilación definitiva.

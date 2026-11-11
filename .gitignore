@@ -7,6 +7,9 @@
 [Mm]emoryCaptures/
 [Uu]serSettings/
 .vs/
+.vscode/
+*.csproj
+*.slnx
 .gradle/
 ExportedObj/
 *.apk

@@ -5,9 +5,18 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/SampleScene.unity
     guid: 8c9cfa26abfee488c85f1582747f6a02
+  - enabled: 1
+    path: Assets/Scenes/Semana06_Habitacion.unity
+    guid: 86e7b881f7fa79e4f9bcf0a385ea49dd
+  - enabled: 1
+    path: Assets/Scenes/Semana06_TileBasedyTerritorios.unity
+    guid: 8e83a07b4c31d48f6bc0652ed3e85e06
+  - enabled: 1
+    path: Assets/Scenes/Semana08_EventosYCorrutinas.unity
+    guid: 2b62a7ca7dde5cf48aadc34d202b13cc
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0
