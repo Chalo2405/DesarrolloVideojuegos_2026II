@@ -45,6 +45,10 @@ public class EnemigoS07 : MonoBehaviour
     private int ataques;
     private bool avisoSinVision;
 
+    // Semana 8: eventos que publica el enemigo
+    public static event System.Action<int> OnEnemigoAtaco;
+    public static event System.Action<EstadoEnemigoS07> OnEstadoCambiado;
+
     void Start()
     {
         bool par = ultimoDigitoDNI % 2 == 0;
@@ -106,6 +110,7 @@ public class EnemigoS07 : MonoBehaviour
                     ataques++;
                     impacto.Play();
                     Debug.Log("Ataque n.º " + ataques + " | t = " + Time.time.ToString("F2"));
+                    OnEnemigoAtaco?.Invoke(ataques);
                 }
                 break;
 
@@ -160,6 +165,7 @@ public class EnemigoS07 : MonoBehaviour
         hayRuta = false;
         proximaRuta = 0f;
         ActualizarEfectos();
+        OnEstadoCambiado?.Invoke(estado);
     }
 
     void ActualizarEfectos()
