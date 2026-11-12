@@ -1,6 +1,6 @@
 # Desarrollo de Videojuegos — 2026 II
 
-Avances prácticos guardados hasta el paso 5 de la Semana 8. El repositorio contiene el proyecto de Unity y el material de apoyo para continuar el trabajo en otra computadora.
+Avances prácticos guardados hasta el paso 6 de la Semana 8. El repositorio contiene el proyecto de Unity y el material de apoyo para continuar el trabajo en otra computadora.
 
 ## Abrir el proyecto en tu PC principal
 
@@ -25,7 +25,7 @@ Avances prácticos guardados hasta el paso 5 de la Semana 8. El repositorio cont
 | 5 | `Assets/Scenes/Semana05_InterfazyRendering2D.unity` |
 | 6 | `Assets/Scenes/Semana06_TileBasedyTerritorios.unity` |
 | 7 | `Assets/Scenes/Semana07_ParticulasEIA.unity` |
-| 8 | `Assets/Scenes/Semana08_EventosYCorrutinas.unity` (preparada hasta el paso 5) |
+| 8 | `Assets/Scenes/Semana08_EventosYCorrutinas.unity` (preparada hasta el paso 6) |
 
 También están incluidos los scripts, herramientas del editor, animaciones, audio, fotografías, sprites, prefabs, tiles, archivos `.meta`, configuración del proyecto y versiones de los paquetes.
 
