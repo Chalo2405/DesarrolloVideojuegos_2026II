@@ -73,7 +73,7 @@ public class GestorPartidaS08 : MonoBehaviour
         Keyboard teclado = Keyboard.current;
         if (teclado == null) return;
 
-        if (teclado.enterKey.wasPressedThisFrame)
+        if (teclado.enterKey.wasPressedThisFrame || teclado.numpadEnterKey.wasPressedThisFrame)
         {
             Reiniciar();
             return;
