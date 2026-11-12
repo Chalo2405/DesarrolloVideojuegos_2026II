@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -24,6 +25,10 @@ public class SaludJugadorS08 : MonoBehaviour
     private int vidas;
     private int parpadeos;
     private bool derrotado;
+    private bool invulnerable;
+
+    [Header("Referencias")]
+    [SerializeField] private ParticleSystem particulasDerrota;
 
     void Awake()
     {
@@ -58,18 +63,57 @@ public class SaludJugadorS08 : MonoBehaviour
     {
         if (derrotado) return;
 
+        if (invulnerable)
+        {
+            Debug.Log("S08 | Ataque n.º " + numeroAtaque + " ignorado: el jugador es invulnerable | t = "
+                + Time.time.ToString("F2"));
+            return;
+        }
+
         vidas--;
         Debug.Log("S08 | Daño por el ataque n.º " + numeroAtaque + " | vidas = " + vidas + " de " + vidasIniciales
             + " | t = " + Time.time.ToString("F2"));
         OnSaludCambiada?.Invoke(vidas, vidasIniciales);
 
-        if (vidas <= 0)
+        if (vidas <= 0) StartCoroutine(SecuenciaDerrota());
+        else StartCoroutine(Invulnerabilidad());
+    }
+
+    IEnumerator Invulnerabilidad()
+    {
+        invulnerable = true;
+        float inicio = Time.time;
+
+        // Corrutina anidada: esta corrutina espera a que la otra termine por completo
+        yield return StartCoroutine(Parpadeo(parpadeos, 0.125f));
+
+        invulnerable = false;
+        Debug.Log("S08 | Invulnerabilidad terminada: " + parpadeos + " parpadeos en "
+            + (Time.time - inicio).ToString("F2") + " s");
+    }
+
+    IEnumerator Parpadeo(int veces, float intervalo)
+    {
+        for (int i = 0; i < veces; i++)
         {
-            derrotado = true;
             sprite.enabled = false;
-            Debug.Log("S08 | Derrota: se publica OnJugadorDerrotado | t = " + Time.time.ToString("F2"));
-            OnJugadorDerrotado?.Invoke();
+            yield return new WaitForSeconds(intervalo);
+            sprite.enabled = true;
+            yield return new WaitForSeconds(intervalo);
         }
+    }
+
+    IEnumerator SecuenciaDerrota()
+    {
+        if (derrotado) yield break;
+
+        derrotado = true;
+        Debug.Log("S08 | Derrota (1): inicia la secuencia | t = " + Time.time.ToString("F2"));
+        particulasDerrota.Play();
+        yield return StartCoroutine(Parpadeo(6, 0.125f));
+        sprite.enabled = false;
+        Debug.Log("S08 | Derrota (2): se publica OnJugadorDerrotado | t = " + Time.time.ToString("F2"));
+        OnJugadorDerrotado?.Invoke();
     }
 
     // Receptor del mensaje que el gestor enviará con SendMessage en el Paso 19

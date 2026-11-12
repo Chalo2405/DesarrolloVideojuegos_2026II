@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -11,6 +12,7 @@ public class GestorPartidaS08 : MonoBehaviour
     public static event Action<int, int, int> OnMarcadorCambiado; // cristales, total, puntos
     public static event Action<string, float> OnAviso;           // texto, segundos (0 = fijo)
     public static event Action<bool, int> OnPartidaTerminada;    // victoria, puntos finales
+    public static event Func<int> ConsultarBonificacion;        // consulta: devuelve un valor
 
     [Header("Referencias")]
     [SerializeField] private Transform contenedorCristales;
@@ -20,6 +22,7 @@ public class GestorPartidaS08 : MonoBehaviour
     private int cristales;
     private int puntos;
     private bool terminada;
+    private bool reanudando;
 
     public bool EnPausa { get; private set; }
 
@@ -79,7 +82,10 @@ public class GestorPartidaS08 : MonoBehaviour
             return;
         }
 
-        // (Paso 14) Aquí leerás la tecla P para la pausa
+        if (teclado.pKey.wasPressedThisFrame && !terminada && !reanudando)
+        {
+            AlternarPausa();
+        }
     }
 
     // Método público: el UnityEvent de cada cristal lo llamará desde el Inspector
@@ -92,6 +98,82 @@ public class GestorPartidaS08 : MonoBehaviour
             + " | t = " + Time.time.ToString("F2"));
         OnMarcadorCambiado?.Invoke(cristales, total, puntos);
         if (TodosRecogidos) OnAviso?.Invoke("Cristales completos: ve al portal del Territorio B", 3f);
+    }
+
+    void AlternarPausa()
+    {
+        if (!EnPausa)
+        {
+            EnPausa = true;
+            Time.timeScale = 0f;
+            Debug.Log("S08 | Pausa activada | Time.time = " + Time.time.ToString("F2")
+                + " | tiempo real = " + Time.realtimeSinceStartup.ToString("F2"));
+            OnAviso?.Invoke("PAUSA: presiona P para continuar", 0f);
+        }
+        else
+        {
+            StartCoroutine(Reanudar());
+        }
+    }
+
+    IEnumerator Reanudar()
+    {
+        reanudando = true;
+        for (int cuenta = 3; cuenta >= 1; cuenta--)
+        {
+            OnAviso?.Invoke("Reanudando en " + cuenta, 0f);
+            Debug.Log("S08 | Reanudando en " + cuenta + " | Time.time = " + Time.time.ToString("F2")
+                + " | tiempo real = " + Time.realtimeSinceStartup.ToString("F2"));
+            // Tiempo real: no depende de Time.timeScale, que ahora vale 0
+            yield return new WaitForSecondsRealtime(1f);
+        }
+
+        Time.timeScale = 1f;
+        EnPausa = false;
+        reanudando = false;
+        OnAviso?.Invoke("", 0f);
+        Debug.Log("S08 | Juego reanudado | Time.time = " + Time.time.ToString("F2")
+            + " | tiempo real = " + Time.realtimeSinceStartup.ToString("F2"));
+    }
+
+    // Método público: el portal lo llamará cuando el jugador lo cruce estando encendido
+    public void DeclararVictoria()
+    {
+        if (terminada) return;
+        terminada = true;
+        // (Paso 19) Aquí llamarás a Finalizar(true)
+        StartCoroutine(SecuenciaVictoria());
+    }
+
+    IEnumerator SecuenciaVictoria()
+    {
+        // Func: el gestor pregunta y espera una respuesta. Si nadie responde, usa 0
+        int bonificacion = ConsultarBonificacion?.Invoke() ?? 0;
+        Debug.Log("S08 | Victoria: bonificación consultada = " + bonificacion + " | puntos antes = " + puntos);
+        yield return StartCoroutine(ContarBonificacion(bonificacion));
+        AnunciarFinal(true);
+    }
+
+    IEnumerator ContarBonificacion(int bonificacion)
+    {
+        if (bonificacion <= 0)
+        {
+            Debug.Log("S08 | Sin bonificación que sumar");
+            yield break;
+        }
+
+        int sumado = 0;
+        int fotogramas = 0;
+        while (sumado < bonificacion)
+        {
+            int paso = Mathf.Min(7, bonificacion - sumado);
+            sumado += paso;
+            puntos += paso;
+            fotogramas++;
+            OnMarcadorCambiado?.Invoke(cristales, total, puntos);
+            yield return null; // espera un fotograma
+        }
+        Debug.Log("S08 | Bonificación de " + bonificacion + " puntos sumada en " + fotogramas + " fotogramas");
     }
 
     void AlDerrotarJugador()
